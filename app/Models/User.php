@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Model
-{
+{   
+    protected $guarded = ['id'];
     protected $table = 'users';
     protected $primaryKey = 'id';
     protected $keyType = 'int';
-    protected $timestamps = true;
-    protected $incrementing = true;
+    public $timestamps = true;
+    public $incrementing = true;
     
     function contacts() : HasMany {
         return $this->hasMany(Contact::class , 'user_id','id');
