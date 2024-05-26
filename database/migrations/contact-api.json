@@ -1,0 +1,317 @@
+{
+    "openapi":"3.0.3",
+    "info": {
+        "title":"Contact API",
+        "description": "Contact API",
+        "version":"1.0"
+    },
+    "servers": [
+        {
+            "url":"https://127.0.0.1:8000"
+        }
+    ],
+    "paths": {
+        "/api/contacts": {
+            "get": {
+                "description": "Seacrh contact",
+                "parameters": [
+                    {
+                    "name": "Authorization",
+                    "in": "header"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json" : {
+                                "schema" :{
+                                    "type": "object",
+                                    "properties": {
+                                        "data" :{
+                                            "type": "array",
+                                            "items" :{
+                                                "type": "object",
+                                                "properties": {
+                                                    "id" :{
+                                                        "type": "number"
+                                                    },
+                                                    "first_name" :{
+                                                        "type": "string"
+                                                    },
+                                                    "last_name" :{
+                                                        "type": "string"
+                                                    },
+                                                    "email" :{
+                                                        "type": "string"
+                                                    },
+                                                    "phone" :{
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "errors" :{
+                                            "type": "object"
+                                        },
+                                        "meta" :{
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create new contact",
+                "parameters": [{
+                    "name": "Authorization",
+                    "in": "header"
+                }],
+                "requestBody": {
+                    "description": "Create new contact",
+                    "content": {
+                        "application/json":{
+                            "schema" :{
+                                "type": "object",
+                                "properties": {
+                                    "first_name" :{
+                                        "type": "string"
+                                    },
+                                    "last_name" :{
+                                        "type": "string"
+                                    },
+                                    "email" :{
+                                        "type": "string"
+                                    },
+                                    "phone" :{
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["email"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succesfully created contact",
+                        "content": {
+                            "application/json" :{
+                                "schema" :{
+                                    "type": "object",
+                                    "properties": {
+                                        "data" :{
+                                            "type": "object",
+                                            "properties": {
+                                                "id" :{
+                                                    "type": "number"
+                                                },
+                                                "first_name" :{
+                                                    "type": "string"
+                                                },
+                                                "last_name" :{
+                                                    "type": "string"
+                                                },
+                                                "email" :{
+                                                    "type": "string"
+                                                },
+                                                "phone" :{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors" :{
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/contacts/{id}": {
+            "get":{
+                "description": "Get contact",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succesfully get contact",
+                        "content": {
+                            "application/json" :{
+                                "schema" :{
+                                    "type": "object",
+                                    "properties": {
+                                        "data" :{
+                                            "type": "object",
+                                            "properties": {
+                                                "id" :{
+                                                    "type": "number"
+                                                },
+                                                "first_name" :{
+                                                    "type": "string"
+                                                },
+                                                "last_name" :{
+                                                    "type": "string"
+                                                },
+                                                "email" :{
+                                                    "type": "string"
+                                                },
+                                                "phone" :{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors" :{
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update contact",
+                "requestBody": {
+                    "description": "Update contact",
+                    "content": {
+                        "application/json":{
+                            "schema" :{
+                                "type": "object",
+                                "properties": {
+                                    "first_name" :{
+                                        "type": "string"
+                                    },
+                                    "last_name" :{
+                                        "type": "string"
+                                    },
+                                    "email" :{
+                                        "type": "string"
+                                    },
+                                    "phone" :{
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succesfully update contact",
+                        "content": {
+                            "application/json" :{
+                                "schema" :{
+                                    "type": "object",
+                                    "properties": {
+                                        "data" :{
+                                            "type": "object",
+                                            "properties": {
+                                                "id" :{
+                                                    "type": "number"
+                                                },
+                                                "first_name" :{
+                                                    "type": "string"
+                                                },
+                                                "last_name" :{
+                                                    "type": "string"
+                                                },
+                                                "email" :{
+                                                    "type": "string"
+                                                },
+                                                "phone" :{
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors" :{
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove contact",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succesfully delete contact",
+                        "content": {
+                            "application/json" :{
+                                "schema" :{
+                                    "type": "object",
+                                    "properties": {
+                                        "data" :{
+                                            "type": "boolean"
+                                        },
+                                        "errors" :{
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
