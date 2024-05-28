@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserRegisterRequest;
-use App\Http\Resources\UserResource;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserController extends Controller
 {
@@ -20,6 +23,24 @@ class UserController extends Controller
         $user->save();
 
         return (new UserResource($user))->response()->setStatusCode(201);
+    }
+
+    function login(UserLoginRequest $request) : UserResource {
+        $request->validated();
+        // dd($request->username);
+        $user = User::where('username' , $request->username)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw new HttpResponseException(response([
+                'errors' => [
+                    'message' => 'username or password wrong'
+                ]
+            ],401));
+        }
+
+        $user->token = Str::uuid()->toString();
+        $user->save();
+        return new UserResource($user);
     }
     
     /**
