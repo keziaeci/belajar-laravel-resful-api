@@ -110,4 +110,45 @@ class UserTest extends TestCase
             ]
         ]);
     }
+
+    function testGetCurrentUser() {
+        $this->seed([UserSeeder::class]);
+        
+        $this->get('/api/users/current',[
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(200)
+        ->assertJson([
+            'data' => [
+                'username' => 'ren',
+                'name' => 'Regina',
+            ]
+        ]);
+    }
+
+    function testGetCurrentUserUnauthorized() {
+        $this->seed([UserSeeder::class]);
+        
+        $this->get('/api/users/current')
+        ->assertStatus(401)
+        ->assertJson([
+            'errors' => [
+                'message' => 'unauthorized',
+            ]
+        ]);
+    }
+
+    function testGetCurrentUserInvalidToken() {
+        $this->seed([UserSeeder::class]);
+        
+        $this->get('/api/users/current',[
+            'Authorization' => 'asdu'
+        ])
+        ->assertStatus(401)
+        ->assertJson([
+            'errors' => [
+                'message' => 'unauthorized',
+            ]
+        ]);
+    }
 }
