@@ -11,11 +11,12 @@ class Contact extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
     protected $table = 'contacts';
     protected $primaryKey = 'id';
     protected $keyType = 'int';
-    protected $timestamps = true;
-    protected $incrementing = true;
+    public $timestamps = true;
+    public $incrementing = true;
 
     function user() : BelongsTo {
         return $this->belongsTo(User::class , 'user_id', 'id');

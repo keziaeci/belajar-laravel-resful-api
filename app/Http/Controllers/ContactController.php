@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
+use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 
 class ContactController extends Controller
@@ -29,7 +30,23 @@ class ContactController extends Controller
      */
     public function store(StoreContactRequest $request)
     {
-        //
+        $data = $request->validated();
+        $user = auth()->user();
+
+        // dd($data);
+        $contact = Contact::create([
+            'first_name' => $request->first_name ,
+            'last_name' => $request->last_name,
+            'email' => $request->email ,
+            'phone' => $request->phone ,
+            'user_id' => $user->id,
+        ]);
+
+        // $contact = new Contact($data);
+        // $contact->user_id = $user->id;
+        // $contact->save();
+
+        return (new ContactResource($contact))->response()->setStatusCode(201);
     }
 
     /**

@@ -116,7 +116,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Succesfully created contact",
                         "content": {
                             "application/json" :{
