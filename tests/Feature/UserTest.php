@@ -8,7 +8,10 @@ use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+use function PHPUnit\Framework\assertEmpty;
+use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNotNull;
+use function PHPUnit\Framework\assertNull;
 
 class UserTest extends TestCase
 {
@@ -203,6 +206,36 @@ class UserTest extends TestCase
                 'name' => [
                     'The name field must not be greater than 100 characters.'
                 ]
+            ]
+        ]);
+    }
+
+    function testLogoutSuccess() {
+        $this->seed(UserSeeder::class);
+
+        $this->delete('/api/users/logout',headers: [
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(200)
+        ->assertJson([
+            'data' => true
+        ]);
+
+        $user = User::where('username','ren')->first();
+        // assertEquals(null,$user->token);
+        assertNull($user->token);
+    }
+
+    function testLogoutFailed() {
+        $this->seed(UserSeeder::class);
+
+        $this->delete('/api/users/logout',headers: [
+            'Authorization' => 'asfdasdf'
+        ])
+        ->assertStatus(401)
+        ->assertJson([
+            'errors' => [
+                'message' => 'unauthorized'
             ]
         ]);
     }

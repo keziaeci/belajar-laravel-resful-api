@@ -13,6 +13,7 @@ use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserRegisterRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -42,6 +43,16 @@ class UserController extends Controller
         $user->token = Str::uuid()->toString();
         $user->save();
         return new UserResource($user);
+    }
+
+    function logout(Request $request) : JsonResponse {
+        $user = Auth::user();
+        $user->token = null;
+        $user->save();
+
+        return response()->json([
+            'data' => true
+        ])->setStatusCode(200);
     }
 
     function getCurrentUser() {

@@ -26,5 +26,6 @@ Route::controller(UserController::class)->group(function () {
     Route::middleware('apiAuth')->group(function () {
         Route::get('/users/current','getCurrentUser');
         Route::patch('/users/current','update');
+        Route::delete('/users/logout', 'logout');
     });
 });
