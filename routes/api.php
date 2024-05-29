@@ -22,7 +22,9 @@ use Illuminate\Support\Facades\Route;
 Route::controller(UserController::class)->group(function () {
     Route::post('/users','register');
     Route::post('/users/login','login');
+
     Route::middleware('apiAuth')->group(function () {
         Route::get('/users/current','getCurrentUser');
+        Route::patch('/users/current','update');
     });
 });

@@ -151,4 +151,59 @@ class UserTest extends TestCase
             ]
         ]);
     }
+
+    function testUpdateNameSuccess() {
+        $this->seed([UserSeeder::class]);
+        
+        $this->patch('/api/users/current',[
+            'name' => 'aniger'
+        ],
+        [
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(200)
+        ->assertJson([
+            'data' => [
+                'username' => 'ren',
+                'name' => 'aniger',
+                ]
+        ]);
+    }
+
+    function testUpdatePasswordSuccess() {
+        $this->seed([UserSeeder::class]);
+        
+        $this->patch('/api/users/current',[
+            'password' => 'ASD'
+        ],
+        [
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(200)
+        ->assertJson([
+            'data' => [
+                'username' => 'ren',
+                'name' => 'Regina',
+                ]
+        ]);
+    }
+
+    function testUpdateFailed() {
+        $this->seed([UserSeeder::class]);
+        
+        $this->patch('/api/users/current',[
+            'name' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex sit cumque quidem maxime, sunt cupiditate porro sapiente minima? Quo expedita repellat, non ullam harum sed aliquam tempore beatae esse odit, aliquid vero quas! Error quibusdam dicta quam. Eos, incidunt provident. Totam iure hic animi iusto tempore quidem aperiam veniam omnis eveniet id enim inventore, consequuntur cum porro libero natus deserunt corrupti aspernatur molestias quisquam recusandae aut voluptatibus. Possimus, exercitationem omnis explicabo voluptatum eligendi saepe pariatur, consequuntur non repellat delectus expedita earum? Ut sequi labore architecto tenetur vitae, rerum asperiores cumque ipsam sapiente omnis perferendis molestias quisquam, consequuntur repellendus eum quas?'
+        ],
+        [
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(400)
+        ->assertJson([
+            'errors' => [
+                'name' => [
+                    'The name field must not be greater than 100 characters.'
+                ]
+            ]
+        ]);
+    }
 }

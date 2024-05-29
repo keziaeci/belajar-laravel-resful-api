@@ -47,7 +47,7 @@ class UserController extends Controller
     function getCurrentUser() {
         return new UserResource(Auth::user());
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -91,9 +91,20 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request)
     {
-        //
+        $request->validated();
+        $user =  Auth::user();
+        if (isset($request->name)) {
+            $user->name = $request->name;
+        }
+        if (isset($request->password)) {
+            $user->password = bcrypt($request->password);
+        }
+        $user->save();
+        // dd($request->all());
+
+        return new UserResource($user);
     }
 
     /**
