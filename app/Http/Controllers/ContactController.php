@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
+use App\Http\Resources\ContactCollection;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Illuminate\Console\Contracts\NewLineAware;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ContactController extends Controller
@@ -123,5 +126,31 @@ class ContactController extends Controller
         return response()->json([
             'data' => 'true'
         ])->setStatusCode(200);
+    }
+
+    function search(Request $request) {
+        $user = Auth::user();
+        $page = $request->input('page',1);
+        $size = $request->input('size',10);
+
+        $contacts = Contact::where('user_id',$user->id)->where(function (Builder $builder) use ($request) {
+
+            $builder->when($request->name ?? false , function (Builder $builder) use ($request) {
+                return $builder->where('first_name' ,'LIKE' ,"%$request->name%")
+                ->orWhere('last_name' , 'LIKE' , "%$request->name%");
+            });
+            
+            $builder->when($request->email ?? false , function (Builder $builder) use ($request) {
+                return $builder->where('email' ,'LIKE' ,"%$request->email%");
+            });
+            
+            $builder->when($request->phone ?? false , function (Builder $builder) use ($request) {
+                return $builder->where('phone' ,'LIKE' ,"%$request->phone%");
+            });
+            
+        });
+        
+        $contacts = $contacts->paginate(perPage: $size, page: $page);
+        return new ContactCollection($contacts);
     }
 }

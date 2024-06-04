@@ -14,7 +14,7 @@ class Address extends Model
     protected $primaryKey = 'id';
     protected $keyType = 'int';
     protected $timestamps = true;
-    protected $incrementing = true;
+    public $incrementing = true;
 
     function contact() : BelongsTo {
         return $this->belongsTo(Contact::class , 'contact_id', 'id');
