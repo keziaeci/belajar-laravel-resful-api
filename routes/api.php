@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -39,5 +40,11 @@ Route::controller(ContactController::class)->group(function () {
         Route::get('/contacts/{id}', 'show')->where('id','[0-9]+');
         Route::put('/contacts/{id}', 'update')->where('id','[0-9]+');
         Route::delete('/contacts/{id}', 'destroy')->where('id','[0-9]+');
+    });
+});
+
+Route::controller(AddressController::class)->group(function () {
+    Route::middleware('apiAuth')->group(function () {
+        Route::post('/contacts/{idContact}/addresses', 'store')->where('idContact','[0-9]+');
     });
 });

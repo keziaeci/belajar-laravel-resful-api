@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AddressResource;
+use App\Models\Address;
+use App\Models\Contact;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreAddressRequest;
 use App\Http\Requests\UpdateAddressRequest;
-use App\Models\Address;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AddressController extends Controller
 {
@@ -27,9 +31,32 @@ class AddressController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAddressRequest $request)
+    public function store(StoreAddressRequest $request, int $idContact)
     {
-        //
+        $user = Auth::user();
+        $contact = Contact::where('user_id',$user->id)->where('id',$idContact)->first();
+        $request->validated();   
+        
+        if (!$contact) {
+            throw new HttpResponseException(response()->json([
+                'errors' => [
+                    'message' => [
+                        'Not Found'
+                    ]
+                ]
+            ])->setStatusCode(404));
+        }
+
+        $address = Address::create([
+            'street' => $request->street,
+            'city' => $request->city,
+            'province' => $request->province,
+            'country' => $request->country,
+            'postal_code' =>$request->postal_code,
+            'contact_id' => $idContact
+        ]);
+
+        return (new AddressResource($address))->response()->setStatusCode(201);
     }
 
     /**
