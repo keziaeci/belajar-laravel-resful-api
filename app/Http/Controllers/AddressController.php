@@ -53,7 +53,7 @@ class AddressController extends Controller
             'province' => $request->province,
             'country' => $request->country,
             'postal_code' =>$request->postal_code,
-            'contact_id' => $idContact
+            'contact_id' => $contact->id
         ]);
 
         return (new AddressResource($address))->response()->setStatusCode(201);
@@ -62,9 +62,37 @@ class AddressController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Address $address)
+
+    // urutan parameter harus sesuai dengan urutan variable pada path api
+    public function show(int $idContact, int $idAddress)
     {
-        //
+        $user = Auth::user();
+        $contact = Contact::where('user_id',$user->id)->where('id',$idContact)->first();
+        
+        if (!$contact) {
+            throw new HttpResponseException(response()->json([
+                'errors' => [
+                    'message' => [
+                        'Not Found'
+                    ]
+                ]
+            ])->setStatusCode(404));
+        }
+
+        $address = Address::where('contact_id',$contact->id)->where('id',$idAddress)->first();
+        if (!$address) {
+            throw new HttpResponseException(response()->json([
+                'errors' => [
+                    'message' => [
+                        'Not Found'
+                    ]
+                ]
+            ])->setStatusCode(404));
+        }
+
+        // dd($address);
+
+        return new AddressResource($address);
     }
 
     /**
