@@ -5,11 +5,15 @@ namespace Tests\Feature;
 use App\Models\Address;
 use Tests\TestCase;
 use App\Models\Contact;
+use Database\Seeders\AddressesSeeder;
 use Database\Seeders\AddressSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\ContactSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertEquals;
 
 class AddressTest extends TestCase
 {
@@ -226,4 +230,41 @@ class AddressTest extends TestCase
             ]
         ]);
     }
+
+    function testGetAddressesSuccess() {
+        $this->seed([UserSeeder::class,ContactSeeder::class,AddressSeeder::class]);
+        $contact = Contact::first();
+
+        $this->get("/api/contacts/$contact->id/addresses",[
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(200)
+        ->assertJson([
+            'data' => [
+                [
+                    'street' => 'test',
+                    'city' => 'test',
+                    'province' => 'test',
+                    'country' => 'test' ,
+                    'postal_code' => '123123445',
+                ]
+            ]
+        ]);
+    }
+
+    function testGetAddressesFailed() {
+        $this->seed([UserSeeder::class,ContactSeeder::class,AddressSeeder::class]);
+
+        $this->get("/api/contacts/0/addresses",[
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(404)
+        ->assertJson([
+            'errors' => [
+                'message' => ['Not Found']
+            ]
+        ]);
+    }
+
+
 }

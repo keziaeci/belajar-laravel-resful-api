@@ -49,5 +49,6 @@ Route::controller(AddressController::class)->group(function () {
         Route::put('/contacts/{idContact}/addresses/{idAddress}', 'update')->where('idContact','[0-9]+')->where('idAddress','[0-9]+');
         Route::delete('/contacts/{idContact}/addresses/{idAddress}', 'destroy')->where('idContact','[0-9]+')->where('idAddress','[0-9]+');
         Route::post('/contacts/{idContact}/addresses', 'store')->where('idContact','[0-9]+');
+        Route::get('/contacts/{idContact}/addresses', 'index')->where('idContact','[0-9]+');
     });
 });

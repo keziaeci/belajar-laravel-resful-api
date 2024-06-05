@@ -42,6 +42,12 @@ class AddressController extends Controller
         return $address;
     }
     
+    function index(int $idContact) {
+        $contact = $this->getContact(Auth::user()->id,$idContact);
+
+        $addresses = Address::where('contact_id',$contact->id)->get();
+        return AddressResource::collection($addresses);
+    }
     public function store(StoreAddressRequest $request, int $idContact)
     {
         $user = Auth::user();
