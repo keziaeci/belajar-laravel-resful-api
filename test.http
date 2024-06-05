@@ -1,0 +1,136 @@
+### Register User API
+POST http://127.0.0.1:8000/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+    "username" : "rena",
+    "password" : "123",
+    "name" : "Maria Regina"
+}
+
+### Login User API
+POST http://127.0.0.1:8000/api/users/login HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username" : "rena",
+  "password" : "123"
+} 
+
+### Get Current User API
+GET http://127.0.0.1:8000/api/users/current HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+### Update Current User API
+PATCH http://127.0.0.1:8000/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+{
+    "name" : "Maria Rena"
+}
+
+### Logout Current User API
+
+DELETE http://127.0.0.1:8000/api/users/logout HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+### Create Contact API
+
+POST http://127.0.0.1:8000/api/contacts HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+{
+    "first_name" : "Maria",
+    "last_name" : "Rena",
+    "email" : "mareena@gmail.com",
+    "phone" : "12312313"
+}
+
+### Search Contact API
+GET http://127.0.0.1:8000/api/contacts?name=ren HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+### Get Contact API
+GET http://127.0.0.1:8000/api/contacts/3284 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+### Update Contact API
+PUT http://127.0.0.1:8000/api/contacts/3284 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+{
+    "first_name" : "Maree A",
+    "last_name" : "Reyna",
+    "email" : "mareena@gmail.com",
+    "phone" : "12312313"
+}
+
+### Delete Contact API
+DELETE http://127.0.0.1:8000/api/contacts/3284 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+### Create Address API
+POST http://127.0.0.1:8000/api/contacts/3286/addresses HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+{
+    "street" : "Jl kemana aj",
+    "city" : "Semarang",
+    "province" : "Jawa Utara",
+    "country" : "Konoha",
+    "postal_code" : "1231123"
+}
+
+### Get Address API
+GET http://127.0.0.1:8000/api/contacts/3286/addresses/269 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+### Update Address API
+PUT http://127.0.0.1:8000/api/contacts/3286/addresses/269 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+{
+    "street" : "",
+    "city" : "Semarang",
+    "province" : "Jawa Utara",
+    "country" : "Konoha",
+    "postal_code" : "1231123"
+}
+
+### Delete Address API
+DELETE http://127.0.0.1:8000/api/contacts/3286/addresses/269 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+### Get Contact's Addresses API
+GET http://127.0.0.1:8000/api/contacts/3286/addresses HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: 7442318a-3b12-46e5-b398-412901114e11
+
+
