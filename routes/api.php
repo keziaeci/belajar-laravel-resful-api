@@ -47,6 +47,7 @@ Route::controller(AddressController::class)->group(function () {
     Route::middleware('apiAuth')->group(function () {
         Route::get('/contacts/{idContact}/addresses/{idAddress}', 'show')->where('idContact','[0-9]+')->where('idAddress','[0-9]+');
         Route::put('/contacts/{idContact}/addresses/{idAddress}', 'update')->where('idContact','[0-9]+')->where('idAddress','[0-9]+');
+        Route::delete('/contacts/{idContact}/addresses/{idAddress}', 'destroy')->where('idContact','[0-9]+')->where('idAddress','[0-9]+');
         Route::post('/contacts/{idContact}/addresses', 'store')->where('idContact','[0-9]+');
     });
 });

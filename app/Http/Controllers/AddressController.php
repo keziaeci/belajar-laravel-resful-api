@@ -92,8 +92,15 @@ class AddressController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Address $address)
+    public function destroy(int $idContact, int $idAddress)
     {
-        //
+        $user = Auth::user();
+        $contact = $this->getContact($user->id,$idContact);
+        $address = $this->getAddress($contact->id,$idAddress);
+
+        $address->delete();
+        return response()->json([
+            'data' => 'true'
+        ])->setStatusCode(200);
     }
 }
