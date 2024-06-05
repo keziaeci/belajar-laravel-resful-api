@@ -60,6 +60,7 @@ class ContactController extends Controller
      */
     public function show($id)
     {
+        // TODO: code refactory
         $contact = Contact::where('id' , $id)->where('user_id', Auth::user()->id)->first();
         if (!$contact) {
             throw new HttpResponseException(response()->json([

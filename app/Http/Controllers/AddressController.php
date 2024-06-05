@@ -12,32 +12,24 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AddressController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAddressRequest $request, int $idContact)
-    {
-        $user = Auth::user();
-        $contact = Contact::where('user_id',$user->id)->where('id',$idContact)->first();
-        $request->validated();   
-        
+    private function getContact(int $idUser, int $idContact) {
+        $contact = Contact::where('user_id',$idUser)->where('id',$idContact)->first();
         if (!$contact) {
+            throw new HttpResponseException(response()->json([
+                'errors' => [  
+                    'message' => [
+                        'Not Found'
+                    ]
+                ]
+            ])->setStatusCode(404));
+        }
+
+        return $contact;
+    }
+    
+    private function getAddress(int $idContact, int $idAddress)  {
+        $address = Address::where('contact_id',$idContact)->where('id',$idAddress)->first();
+        if (!$address) {
             throw new HttpResponseException(response()->json([
                 'errors' => [
                     'message' => [
@@ -47,6 +39,15 @@ class AddressController extends Controller
             ])->setStatusCode(404));
         }
 
+        return $address;
+    }
+    
+    public function store(StoreAddressRequest $request, int $idContact)
+    {
+        $user = Auth::user();
+        $contact = $this->getContact($user->id,$idContact);
+        $request->validated();   
+        
         $address = Address::create([
             'street' => $request->street,
             'city' => $request->city,
@@ -67,48 +68,25 @@ class AddressController extends Controller
     public function show(int $idContact, int $idAddress)
     {
         $user = Auth::user();
-        $contact = Contact::where('user_id',$user->id)->where('id',$idContact)->first();
-        
-        if (!$contact) {
-            throw new HttpResponseException(response()->json([
-                'errors' => [
-                    'message' => [
-                        'Not Found'
-                    ]
-                ]
-            ])->setStatusCode(404));
-        }
-
-        $address = Address::where('contact_id',$contact->id)->where('id',$idAddress)->first();
-        if (!$address) {
-            throw new HttpResponseException(response()->json([
-                'errors' => [
-                    'message' => [
-                        'Not Found'
-                    ]
-                ]
-            ])->setStatusCode(404));
-        }
-
-        // dd($address);
+        $contact = $this->getContact($user->id,$idContact);
+        $address = $this->getAddress($contact->id,$idAddress);
 
         return new AddressResource($address);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Address $address)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAddressRequest $request, Address $address)
+    public function update(UpdateAddressRequest $request, int $idContact, int $idAddress)
     {
-        //
+        $user = Auth::user();
+        $contact = $this->getContact($user->id,$idContact);
+        $address = $this->getAddress($contact->id,$idAddress);
+
+        $address->fill($request->validated());
+        $address->save();
+
+        return new AddressResource($address);
     }
 
     /**

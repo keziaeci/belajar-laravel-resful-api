@@ -115,4 +115,73 @@ class AddressTest extends TestCase
             ]
         ]);
     }
+
+    function testUpdateSuccess() {
+        $this->seed([UserSeeder::class,ContactSeeder::class,AddressSeeder::class]);
+        $address = Address::first();
+
+        $this->put("/api/contacts/{$address->contact_id}/addresses/{$address->id}",[
+            'street' => '',
+            'city' => '',
+            'province' => 'test',
+            'country' => 'test' ,
+            'postal_code' => '123123445',
+        ],
+        [
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(200)
+        ->assertJson([
+            'data' => [
+                'street' => '',
+                'city' => '',
+                'province' => 'test',
+                'country' => 'test' ,
+                'postal_code' => '123123445',
+            ]
+        ]);
+    }
+
+    function testUpdateFailed() {
+        $this->seed([UserSeeder::class,ContactSeeder::class,AddressSeeder::class]);
+        $address = Address::first();
+
+        $this->put("/api/contacts/{$address->contact_id}/addresses/{$address->id}",[
+            'street' => '',
+            'city' => '',
+            'province' => 'test',
+            'country' => '' ,
+            'postal_code' => '123123445',
+        ],
+        [
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(400)
+        ->assertJson([
+            'errors' => [
+                'country' => ["The country field is required."]
+            ]
+        ]);
+    }
+
+    function testUpdateNotFound() {
+        $this->seed([UserSeeder::class,ContactSeeder::class,AddressSeeder::class]);
+
+        $this->put("/api/contacts/0/addresses/0",[
+            'street' => '',
+            'city' => '',
+            'province' => 'test',
+            'country' => 'qqweqwe' ,
+            'postal_code' => '123123445',
+        ],
+        [
+            'Authorization' => 'ren'
+        ])
+        ->assertStatus(404)
+        ->assertJson([
+            'errors' => [
+                'message' => ["Not Found"]
+            ]
+        ]);
+    }
 }
